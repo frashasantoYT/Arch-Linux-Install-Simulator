@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
     
     <style>
         * {
@@ -730,7 +730,7 @@ If you have both options, Ethernet is usually easier and faster for installation
                     { text: "🔌 Ethernet (Wired) - Automatic & Fast", value: "ethernet", correct: true, path: "ethernet" },
                     { text: "📶 WiFi (Wireless) - Needs Configuration", value: "wifi", correct: true, path: "wifi" }
                 ],
-                output: ``, // Will be set based on choice
+                output: ``,
                 type: "choice-path"
             },
             {
@@ -914,7 +914,7 @@ You MUST match your actual hardware! Installing UEFI on BIOS-only system (or vic
                     { text: "🆕 UEFI/GPT - Modern systems (2012+)", value: "uefi", correct: true, path: "uefi" },
                     { text: "🔙 Legacy BIOS/MBR - Older systems (pre-2012)", value: "bios", correct: true, path: "bios" }
                 ],
-                output: ``, // Will be set based on choice
+                output: ``, 
                 type: "choice-path"
             },
             {
@@ -1663,13 +1663,13 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
             bootMode: null  // 'uefi' or 'bios'
         };
 
-        // Initialize
+        
         function init() {
             renderStepList();
             updateProgress();
         }
 
-        // Render step list in sidebar
+      
         function renderStepList() {
             const stepList = document.getElementById('step-list');
             stepList.innerHTML = installationSteps.map((step, index) => `
@@ -1714,7 +1714,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
 
             const step = installationSteps[currentStep];
             
-            // Skip steps that don't match the user's path
+           
             if (step.showOnlyForPath) {
                 const pathType = step.showOnlyForPath;
                 if (pathType === 'wifi' && userPath.network !== 'wifi') {
@@ -1732,7 +1732,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
                 }
             }
             
-            // Update instruction panel
+          
             document.getElementById('step-title').textContent = `Step ${currentStep + 1}: ${step.title}`;
             document.getElementById('step-description').textContent = step.description;
             
@@ -1741,7 +1741,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
                 const explanationDiv = document.getElementById('step-explanation');
                 const explanationText = document.getElementById('explanation-text');
                 
-                // Convert the explanation to HTML with proper formatting
+              
                 explanationText.innerHTML = step.explanation
                     .replace(/\n/g, '<br>')
                     .replace(/<strong>/g, '<strong class="text-purple-300">')
@@ -1756,7 +1756,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
             renderStepList();
             updateProgress();
             
-            // Show appropriate input method
+       
             if (step.type === 'command') {
                 showCommandInput();
             } else if (step.type === 'choice' || step.type === 'choice-path') {
@@ -1808,7 +1808,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
             `).join('');
         }
 
-        // Submit command
+        
         function submitCommand() {
             const input = document.getElementById('command-input').value.trim();
             const step = installationSteps[currentStep];
@@ -1825,7 +1825,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
             if (input.toLowerCase() === step.command.toLowerCase() || input.includes(step.command.split(' ')[0])) {
                 appendToTerminal('');
                 setTimeout(() => {
-                    // Show output with typing effect
+           
                     const lines = step.output.split('\n');
                     let delay = 0;
                     lines.forEach(line => {
@@ -1853,7 +1853,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
             appendToTerminal(`Selected: ${choice.text}`, 'text-purple-400');
             appendToTerminal('');
             
-            // Save the path choice if this is a path-determining step
+          
             if (step.type === 'choice-path' && choice.path) {
                 // Determine which path type this is
                 if (choice.path === 'ethernet' || choice.path === 'wifi') {
@@ -1866,7 +1866,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
                 appendToTerminal('');
             }
             
-            // Show output if available
+  
             if (step.output && step.output.trim()) {
                 setTimeout(() => {
                     const lines = step.output.split('\n');
@@ -1883,7 +1883,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
                     }, delay + 1000);
                 }, 500);
             } else {
-                // No output, just complete the step
+            
                 setTimeout(() => {
                     completeStep();
                 }, 500);
@@ -1929,7 +1929,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
             document.getElementById('command-input').focus();
         }
 
-        // Show hint (deprecated but keeping for compatibility)
+     
         function showHint() {
             const step = installationSteps[currentStep];
             const hintPanel = document.getElementById('step-hints');
@@ -1937,7 +1937,7 @@ Congratulations! You've successfully installed Arch Linux from scratch!`,
             hintPanel.classList.remove('hidden');
         }
 
-        // Skip step
+  
         function skipStep() {
             const step = installationSteps[currentStep];
             appendToTerminal('Skipping step...', 'text-yellow-400');
