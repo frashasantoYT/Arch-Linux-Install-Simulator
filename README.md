@@ -227,21 +227,16 @@ Contributions are welcome! Here's how you can help:
 
 ```bash
 # Fork the repository
-git clone https://github.com/yourusername/arch-linux-simulator.git
+git clone https://github.com/frashasantoYT/Arch-Linux-Install-Simulator.git
 
-# Create a feature branch
+
 git checkout -b feature/amazing-feature
 
-# Make your changes
-# Test thoroughly in multiple browsers
-
-# Commit your changes
 git commit -m "Add amazing feature"
 
-# Push to your fork
 git push origin feature/amazing-feature
 
-# Open a Pull Request
+
 ```
 
 ---
@@ -288,7 +283,7 @@ Special thanks to:
 
 - **Creator**: [King Santo]
 - **Portfolio**: [https://santoiservices.com]
-- **GitHub**: [@yourusername](https://github.com/frashasantoYT)
+- **GitHub**: [@frashasantoYT](https://github.com/frashasantoYT)
 - **Email**: frashasanto111@gmail.com
 
 
