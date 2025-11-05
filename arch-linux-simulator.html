@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Arch Linux Installation Simulator - Learn to install Arch Linux step-by-step in a safe environment">
+    <meta name="keywords" content="Arch Linux, Installation, Tutorial, Simulator, UEFI, BIOS, GPT, MBR, Linux">
+    <meta name="author" content="Your Name">
+    <title>Arch Linux Installation Simulator - Interactive Learning Platform</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <style>
+        * {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1d35 100%);
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .terminal-cursor {
+            animation: blink 1s infinite;
+        }
+        
+        .terminal-output {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .typing-effect {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #1793d1;
+            animation: typing 2s steps(40) forwards, blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            50% { border-color: transparent }
+        }
+        
+        .glow {
+            box-shadow: 0 0 20px rgba(23, 147, 209, 0.3);
+        }
+        
+        .arch-gradient {
+            background: linear-gradient(135deg, #1793d1 0%, #0a4d68 100%);
+        }
+        
+        .terminal-window {
+            background: #0a0e17;
+            border: 1px solid #1793d1;
+        }
+        
+        .glass-effect {
+            background: rgba(10, 14, 23, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(23, 147, 209, 0.2);
+        }
+        
+        .step-item-active {
+            background: rgba(23, 147, 209, 0.1);
+            border-left: 3px solid #1793d1;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #0a0e17;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #1793d1;
+            border-radius: 4px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #1da1db;
+        }
+        
+        .arch-logo {
+            filter: drop-shadow(0 0 10px rgba(23, 147, 209, 0.5));
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(23, 147, 209, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(23, 147, 209, 0.6);
+            }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .arch-button {
+            background: linear-gradient(135deg, #1793d1 0%, #0f7eb5 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .arch-button:hover {
+            background: linear-gradient(135deg, #1da1db 0%, #1793d1 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(23, 147, 209, 0.4);
+        }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen">
+    
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-50 border-b border-blue-500/30">
+        <div class="container mx-auto px-6 py-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="arch-logo">
+                        <img src="https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png" 
+                             alt="Arch Linux Logo" 
+                             class="h-12 w-auto"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <!-- Fallback SVG if image fails to load -->
+                        <svg class="w-12 h-12 text-blue-400 hidden" viewBox="0 0 65 65" fill="currentColor" style="display:none;">
+                            <path d="M32.3485 6.3506L29.7939 12.494L27.8409 17.5308L23.5098 27.077L20.3521 34.2123L17.1085 41.5332L13.6952 49.2841L11.0547 55.6475H18.3628L21.3547 62.6494H43.3721L46.3718 55.6475H53.6641L50.2663 48.8068L46.9665 41.9973L43.616 35.0875L40.1175 27.8769L36.5859 20.5872L32.3485 6.3506Z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-blue-400 tracking-tight">Arch Linux Installation Simulator</h1>
+                        <p class="text-blue-300/80 text-sm mt-1">Master Arch Installation • Interactive Terminal • Real-World Scenarios</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                  
+                    <div class="glass-effect px-4 py-2 rounded-lg border border-blue-500/30">
+                        <span class="text-blue-300 text-sm font-semibold">Step <span id="current-step">0</span>/<span id="total-steps">10</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="glass-effect sticky top-20 z-40 border-b border-blue-500/20">
+        <div class="container mx-auto px-6 py-3">
+            <div class="w-full bg-gray-900/50 rounded-full h-2 overflow-hidden">
+                <div id="progress-bar" class="arch-gradient h-2 rounded-full transition-all duration-500 pulse-glow" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+            
+            <!-- Left Sidebar - Instructions -->
+            <div class="lg:col-span-1 space-y-4 fade-in-up order-2 lg:order-1">
+                <div class="glass-effect rounded-xl shadow-2xl p-4 sm:p-6 lg:sticky lg:top-32 border border-blue-500/20 max-h-[calc(100vh-160px)] overflow-y-auto scrollbar-thin">
+                    <div class="flex items-center gap-3 mb-4 sm:mb-6">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 arch-gradient rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg sm:text-xl font-bold text-blue-400">Current Task</h2>
+                    </div>
+                    <div id="instruction-panel" class="text-gray-300 space-y-3 sm:space-y-4">
+                        <p class="text-base sm:text-lg font-semibold text-white" id="step-title">Welcome to Arch Linux Installer</p>
+                        <p class="text-xs sm:text-sm text-gray-400 leading-relaxed" id="step-description">Click "Start Installation" to begin the simulation.</p>
+                        
+                      
+                        <div id="step-explanation" class="mt-3 sm:mt-4 p-3 sm:p-4 glass-effect rounded-lg border border-blue-500/30 hidden max-h-64 sm:max-h-80 overflow-y-auto scrollbar-thin">
+                            <div class="flex items-center gap-2 mb-2 sm:mb-3">
+                                <span class="text-xl sm:text-2xl">📖</span>
+                                <p class="text-xs sm:text-sm text-blue-400 font-semibold">Deep Dive:</p>
+                            </div>
+                            <div id="explanation-text" class="text-xs leading-relaxed space-y-2"></div>
+                        </div>
+                        
+                      
+                        <div id="command-display" class="mt-3 sm:mt-4 p-3 sm:p-4 terminal-window rounded-lg border-blue-500/50 hidden">
+                            <p class="text-xs text-blue-400 font-semibold mb-2 sm:mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                Type this command:
+                            </p>
+                            <div class="bg-black/50 rounded-lg p-2 sm:p-3 font-mono text-xs sm:text-sm text-blue-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 border border-blue-500/20">
+                                <code id="command-text" class="flex-1 break-all w-full"></code>
+                                <button onclick="copyCommand()" class="text-xs arch-button px-3 py-1.5 rounded transition flex items-center gap-1 flex-shrink-0 w-full sm:w-auto justify-center">
+                                    <span id="copy-icon">📋</span>
+                                    <span id="copy-text" class="text-white">Copy</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick hint -->
+                        <div id="step-hints" class="mt-3 sm:mt-4 p-3 glass-effect rounded-lg border border-yellow-500/30 hidden">
+                            <p class="text-xs text-yellow-400 font-semibold mb-1 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                                Pro Tip:
+                            </p>
+                            <p class="text-xs text-yellow-200" id="hint-text"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Step Navigation -->
+                    <div class="mt-4 sm:mt-8 space-y-2">
+                        <h3 class="text-xs sm:text-sm font-semibold text-gray-400 mb-2 sm:mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
+                            Installation Steps:
+                        </h3>
+                        <div id="step-list" class="space-y-1 text-xs sm:text-sm max-h-48 sm:max-h-64 overflow-y-auto scrollbar-thin">
+                            <!-- Steps will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+       
+            <div class="lg:col-span-2 space-y-4 sm:space-y-6 fade-in-up order-1 lg:order-2">
+                
+                <!-- Terminal -->
+                <div class="terminal-window rounded-xl shadow-2xl overflow-hidden">
+                    <!-- Terminal Header -->
+                    <div class="glass-effect px-4 sm:px-6 py-2 sm:py-3 flex items-center justify-between border-b border-blue-500/30">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="flex gap-1.5 sm:gap-2">
+                                <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer transition"></div>
+                                <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 cursor-pointer transition"></div>
+                                <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500 hover:bg-green-600 cursor-pointer transition"></div>
+                            </div>
+                            <div class="flex items-center gap-2 text-blue-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span class="text-xs sm:text-sm font-semibold">root@archiso ~ #</span>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500 font-mono hidden sm:block">Terminal 1</div>
+                    </div>
+                    
+                 
+                    <div id="terminal" class="p-4 sm:p-6 terminal-output text-blue-300 h-64 sm:h-96 lg:h-[500px] overflow-y-auto scroll-smooth scrollbar-thin bg-gradient-to-b from-gray-900/50 to-black/50">
+                        <div class="mb-4">
+                            <pre class="text-blue-400 text-xs sm:text-sm leading-tight flex items-center justify-center gap-4">
+
+<svg class="w-12 h-12 sm:w-16 sm:h-16" viewBox="0 0 65 65" fill="currentColor">
+<path d="M32.3485 6.3506L29.7939 12.494L27.8409 17.5308L23.5098 27.077L20.3521 34.2123L17.1085 41.5332L13.6952 49.2841L11.0547 55.6475H18.3628L21.3547 62.6494H43.3721L46.3718 55.6475H53.6641L50.2663 48.8068L46.9665 41.9973L43.616 35.0875L40.1175 27.8769L36.5859 20.5872L32.3485 6.3506Z"/>
+</svg>
+
+   _____                .__     
+  /  _  \_______   ____ |  |__  
+ /  /_\  \_  __ \_/ ___\|  |  \ 
+/    |    \  | \/\  \___|   Y  \
+\____|__  /__|    \___  >___|  /
+        \/            \/     \/ 
+        Linux Installation Simulator
+                            </pre>
+                        </div>
+                        <div class="text-gray-400 space-y-2">
+                            <p class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                Welcome to the Arch Linux Installation Simulator!
+                            </p>
+                            <p>This interactive guide will walk you through the installation process step-by-step.</p>
+                            <p class="mt-4 text-yellow-400">Ready to master Arch Linux installation? Click the button below to start.</p>
+                        </div>
+                        <div class="mt-6">
+                            <span class="text-blue-400">root@archiso ~ #</span>
+                            <span class="terminal-cursor text-blue-400">_</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="input-section" class="glass-effect rounded-xl shadow-lg p-4 sm:p-6 border border-blue-500/20 hidden">
+                    <h3 class="text-base sm:text-lg font-semibold text-blue-400 mb-3 sm:mb-4 flex items-center gap-2">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        Enter Command
+                    </h3>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input 
+                            type="text" 
+                            id="command-input" 
+                            class="flex-1 terminal-window border border-blue-500/30 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base text-blue-300 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            placeholder="Type the command here..."
+                        />
+                        <button 
+                            onclick="submitCommand()" 
+                            class="arch-button text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-semibold transition shadow-lg"
+                        >
+                            Execute
+                        </button>
+                    </div>
+                    <div class="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2">
+                        <button 
+                            onclick="autoFillCommand()" 
+                            class="text-xs sm:text-sm glass-effect hover:bg-purple-600/20 border border-purple-500/30 text-purple-300 px-4 py-2 rounded-lg transition"
+                        >
+                            ✨ Auto-Fill Command
+                        </button>
+                        <button 
+                            onclick="skipStep()" 
+                            class="text-xs sm:text-sm glass-effect hover:bg-gray-600/20 border border-gray-500/30 text-gray-300 px-4 py-2 rounded-lg transition"
+                        >
+                            ⏭️ Skip Step
+                        </button>
+                    </div>
+                </div>
+
+              
+                <div id="choice-section" class="glass-effect rounded-xl shadow-lg p-4 sm:p-6 border border-blue-500/20 hidden">
+                    <h3 class="text-base sm:text-lg font-semibold text-blue-400 mb-3 sm:mb-4 flex items-center gap-2">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                        Make Your Choice
+                    </h3>
+                    <div id="choices" class="space-y-3">
+                        
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 sm:gap-4 justify-center flex-wrap">
+                    <button 
+                        id="start-btn"
+                        onclick="startInstallation()" 
+                        class="arch-button text-white px-6 sm:px-10 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg transition shadow-xl flex items-center gap-2 sm:gap-3">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Start Installation
+                    </button>
+                    <button 
+                        id="next-btn"
+                        onclick="nextStep()" 
+                        class="arch-button text-white px-6 sm:px-10 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg transition shadow-xl hidden flex items-center gap-2 sm:gap-3"
+                    >
+                        Next Step
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </button>
+                    <button 
+                        onclick="restartSimulation()" 
+                        class="glass-effect border border-red-500/30 hover:bg-red-600/20 text-red-300 px-4 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold transition flex items-center gap-2 text-sm sm:text-base"
+                    >
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Restart
+                    </button>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="glass-effect border border-yellow-500/30 rounded-xl p-4 sm:p-6">
+                    <h4 class="text-yellow-400 font-semibold mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        About This Simulator
+                    </h4>
+                    <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                        This is a <strong class="text-blue-400">safe, interactive simulation</strong> of the Arch Linux installation process. 
+                        No actual changes are made to your system. Perfect for learning before attempting a real installation! 
+                        <span class="text-green-400">Supports WiFi setup, UEFI/GPT, and Legacy BIOS/MBR installations.</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-gray-900 via-black to-gray-900 border-t border-blue-500/30 mt-16">
+        <div class="container mx-auto px-6 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                <!-- About -->
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-6 h-6 text-blue-400" viewBox="0 0 65 65" fill="currentColor">
+                            <path d="M32.3485 6.3506L29.7939 12.494L27.8409 17.5308L23.5098 27.077L20.3521 34.2123L17.1085 41.5332L13.6952 49.2841L11.0547 55.6475H18.3628L21.3547 62.6494H43.3721L46.3718 55.6475H53.6641L50.2663 48.8068L46.9665 41.9973L43.616 35.0875L40.1175 27.8769L36.5859 20.5872L32.3485 6.3506Z"/>
+                        </svg>
+                        <h3 class="text-lg font-bold text-blue-400">About This Simulator</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        An interactive, educational tool designed to teach Arch Linux installation in a safe, simulated environment. Perfect for beginners and enthusiasts alike!
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold text-blue-400 mb-3 flex items-center gap-2">
+                        <span>🔗</span> Quick Links
+                    </h3>
+                    <ul class="space-y-2 text-sm">
+                        <li>
+                            <a href="https://archlinux.org/" target="_blank" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                                <span>→</span> Arch Linux Official
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wiki.archlinux.org/" target="_blank" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                                <span>→</span> Arch Wiki
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://archlinux.org/download/" target="_blank" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                                <span>→</span> Download Arch ISO
+                            </a>
+                        </li>
+                        <li>
+                            <a href="arch-linux-installation-guide.md" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                                <span>→</span> Installation Guide (Markdown)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h3 class="text-lg font-bold text-blue-400 mb-3 flex items-center gap-2">
+                        <span>📚</span> Learning Resources
+                    </h3>
+                    <ul class="space-y-2 text-sm">
+                       
+                        <li>
+                            <a href="https://github.com/archlinux" target="_blank" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                                <span>→</span> Arch on GitHub
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://aur.archlinux.org/" target="_blank" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                                <span>→</span> AUR Repository
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-800 my-6"></div>
+
+            <!-- Bottom Footer -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-gray-500 text-sm text-center md:text-left">
+                    <p>
+                        Made with <span class="text-red-500 animate-pulse">❤</span> for the Arch Linux Community
+                    </p>
+                    <p class="mt-1 text-xs text-gray-600">
+                        "I use Arch, btw" - Now you can too!
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <a href="https://github.com/frashasantoYT" target="_blank" class="text-gray-500 hover:text-blue-400 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="text-gray-500 hover:text-blue-400 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                        </svg>
+                    </a>
+                    <a href="https://reddit.com/r/archlinux" target="_blank" class="text-gray-500 hover:text-blue-400 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center mt-6 pt-6 border-t border-gray-800">
+                <p class="text-xs text-gray-600">
+                    © 2025 Arch Linux Installation Simulator. Not affiliated with Arch Linux official project.
+                </p>
+                <p class="text-xs text-gray-700 mt-1">
+                    This is a learning tool. Always backup your data before attempting a real installation.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="glass-effect border border-blue-500/30 rounded-2xl shadow-2xl p-4 sm:p-8 max-w-2xl mx-auto slide-in max-h-[90vh] overflow-y-auto">
+            <div class="text-center">
+                <div class="text-6xl sm:text-8xl mb-4 sm:mb-6 arch-logo">
+                    <svg class="w-16 h-16 sm:w-24 sm:h-24 mx-auto text-blue-400" viewBox="0 0 65 65" fill="currentColor">
+                        <path d="M32.5 2l-4.5 12.5L21 26.5l-7 12-7 12.5h14l7 12h11l7-12h14l-7-12.5-7-12-7-12L32.5 2z"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-bold text-blue-400 mb-3 sm:mb-4">Congratulations!</h2>
+                <p class="text-base sm:text-xl text-gray-300 mb-4 sm:mb-6">
+                    You've successfully completed the Arch Linux installation simulation!
+                </p>
+                <div class="glass-effect rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 border border-blue-500/20">
+                    <p class="text-blue-400 mb-3 sm:mb-4 font-semibold text-sm sm:text-base">You now understand:</p>
+                    <ul class="text-left text-gray-300 space-y-2 max-w-md mx-auto text-xs sm:text-base">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            Disk partitioning (GPT & MBR)
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            File system formatting
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            Base system installation
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            System configuration
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            Bootloader setup (UEFI & BIOS)
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            Network configuration (WiFi & Ethernet)
+                        </li>
+                    </ul>
+                </div>
+                <p class="text-sm sm:text-lg text-blue-400 mb-4 sm:mb-8 font-mono">
+                    <em>"I use Arch, btw"</em> - You can now say this! 😎
+                </p>
+                <div class="flex gap-3 sm:gap-4 justify-center flex-wrap">
+                    <button 
+                        onclick="restartSimulation()" 
+                        class="arch-button text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg"
+                    >
+                        Try Again
+                    </button>
+                    <button 
+                        onclick="closeModal()" 
+                        class="glass-effect border border-gray-500/30 hover:bg-gray-600/20 text-gray-300 px-8 py-3 rounded-lg font-semibold transition"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Installation steps data
+        const installationSteps = [
+            {
+                id: 1,
+                title: "Verify Boot Mode",
+                description: "First, we need to check if your system booted in UEFI or Legacy BIOS mode. This is crucial because it determines how we'll set up the bootloader later.",
+                explanation: `
+<strong>Why this matters:</strong>
+UEFI (Unified Extensible Firmware Interface) is the modern replacement for BIOS. It offers:
+• Faster boot times
+• Support for drives larger than 2TB
+• Better security features
+• More reliable booting
+
+<strong>What we're checking:</strong>
+The /sys/firmware/efi/efivars directory only exists if the system booted in UEFI mode. If this directory contains files, we're good to go with a modern UEFI installation!
+
+<strong>In a real installation:</strong>
+If this directory doesn't exist, you'd need to restart and enable UEFI mode in your BIOS settings.`,
+                command: "ls /sys/firmware/efi/efivars",
+                hint: "This command lists the contents of the EFI variables directory. Think of it as checking if UEFI mode is 'turned on'.",
+                output: `efi-vars-1
+efi-vars-2
+efi-vars-3
+... (many more files)
+
+✓ System is booted in UEFI mode!`,
+                type: "command"
+            },
+            {
+                id: 2,
+                title: "Check Network Connection",
+                description: "Let's see what network interfaces are available. Do you have Ethernet or do you need to connect via WiFi?",
+                explanation: `
+<strong>Why we need internet:</strong>
+Unlike many Linux distributions that come with everything pre-packaged, Arch Linux downloads the latest packages during installation. This ensures you get the most up-to-date system from day one!
+
+<strong>Understanding network interfaces:</strong>
+• <strong>Ethernet (enp*):</strong> Wired connection - usually works automatically
+• <strong>WiFi (wlan*):</strong> Wireless - requires configuration
+• <strong>Loopback (lo):</strong> Internal interface (not for internet)
+
+<strong>What 'ip link' does:</strong>
+This command lists all network interfaces on your system. It shows:
+• Interface names (like enp0s3, wlan0)
+• Status (UP means active, DOWN means inactive)
+• MAC addresses (hardware identifiers)
+
+<strong>Real-world scenarios:</strong>
+• Desktop with Ethernet cable → Usually auto-connects
+• Laptop without cable → Need to set up WiFi manually
+• Virtual machine → Typically uses Ethernet
+
+Choose based on what YOU have available!`,
+                command: "ip link",
+                hint: "This lists all network interfaces. Look for 'enp' (Ethernet) or 'wlan' (WiFi) in the output.",
+                output: `1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536
+    link/loopback 00:00:00:00:00:00
+
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500
+    link/ether 08:00:27:3a:82:1b
+    
+3: wlan0: <BROADCAST,MULTICAST> mtu 1500
+    link/ether 9c:b6:d0:d0:fc:b5
+
+✓ Network interfaces detected!
+
+Available options:
+• Ethernet (enp0s3) - Wired connection
+• WiFi (wlan0) - Wireless connection`,
+                type: "command"
+            },
+            {
+                id: 3,
+                title: "Choose Connection Type",
+                description: "How will you connect to the internet? Choose your connection method.",
+                explanation: `
+<strong>Ethernet Connection:</strong>
+Advantages:
+• Usually works automatically (plug and play)
+• Faster and more stable
+• No password needed
+• Better for downloading large packages
+
+Best for:
+• Desktop computers
+• Laptops with Ethernet port and cable
+• Virtual machines
+
+<strong>WiFi Connection:</strong>
+Advantages:
+• No cables needed
+• Works anywhere with WiFi
+• Common on laptops
+
+Requirements:
+• Know your WiFi network name (SSID)
+• Know your WiFi password
+• WiFi adapter must be supported
+
+<strong>What happens next:</strong>
+• If Ethernet: We'll verify connection with ping
+• If WiFi: We'll use 'iwctl' to connect to your network
+
+<strong>Pro tip:</strong>
+If you have both options, Ethernet is usually easier and faster for installation. You can set up WiFi properly after installation is complete!`,
+                hint: "Choose based on your actual hardware setup. Ethernet is simpler, but WiFi works great too!",
+                choices: [
+                    { text: "🔌 Ethernet (Wired) - Automatic & Fast", value: "ethernet", correct: true, path: "ethernet" },
+                    { text: "📶 WiFi (Wireless) - Needs Configuration", value: "wifi", correct: true, path: "wifi" }
+                ],
+                output: ``, // Will be set based on choice
+                type: "choice-path"
+            },
+            {
+                id: 4,
+                title: "Connect to WiFi Network",
+                description: "Let's connect to your WiFi network using iwctl (iwd's interactive command-line tool).",
+                explanation: `
+<strong>What is iwctl?</strong>
+'iwctl' is the interactive wireless control utility for iwd (iNet Wireless Daemon). It's the modern WiFi management tool used in the Arch installation environment.
+
+<strong>How WiFi connection works:</strong>
+1. Start iwctl interactive mode
+2. List available WiFi devices (usually wlan0)
+3. Scan for networks
+4. List available networks to find yours
+5. Connect using your WiFi password
+
+<strong>Understanding the commands:</strong>
+• <strong>device list:</strong> Shows your WiFi adapter(s)
+• <strong>station wlan0 scan:</strong> Searches for WiFi networks
+• <strong>station wlan0 get-networks:</strong> Shows found networks
+• <strong>station wlan0 connect "NetworkName":</strong> Connects to network
+
+<strong>Security:</strong>
+Your password is transmitted securely using WPA2/WPA3 encryption. The connection is saved and will reconnect automatically if you lose signal.
+
+<strong>Troubleshooting:</strong>
+• If network not found: Try scanning again
+• If wrong password: You'll get an authentication error
+• If connection drops: Check signal strength
+
+<strong>After connecting:</strong>
+You'll see "Connected" status and get an IP address via DHCP automatically.`,
+                command: "iwctl --passphrase YOUR_WIFI_PASSWORD station wlan0 connect YOUR_NETWORK_NAME",
+                hint: "Replace YOUR_NETWORK_NAME with your WiFi name (SSID) and YOUR_WIFI_PASSWORD with your password. Put names with spaces in quotes.",
+                output: `Launching iwctl...
+
+[iwctl] device list
+  Name    Address             Powered   Adapter
+  wlan0   9c:b6:d0:d0:fc:b5   on        phy0
+
+[iwctl] station wlan0 scan
+Scanning for networks...
+
+[iwctl] station wlan0 get-networks
+  Network Name          Security    Signal
+  MyHomeWiFi           psk         ****
+  NeighborNetwork      psk         ***
+  CoffeeShop_WiFi      psk         **
+
+[iwctl] station wlan0 connect "MyHomeWiFi"
+Type the network passphrase for MyHomeWiFi:
+Passphrase: ••••••••••••
+
+✓ Connected to MyHomeWiFi
+✓ IP address acquired via DHCP: 192.168.1.105
+✓ DNS servers configured
+
+WiFi connection established!`,
+                type: "command",
+                showOnlyForPath: "wifi"
+            },
+            {
+                id: 5,
+                title: "Test Internet Connection",
+                description: "Now let's verify our internet connection works by pinging archlinux.org.",
+                explanation: `
+<strong>Why test the connection?</strong>
+Before proceeding with installation, we must confirm:
+• You can reach the internet
+• DNS resolution is working (converting archlinux.org to IP)
+• Packets can travel there and back
+
+<strong>What 'ping' does:</strong>
+The ping command sends small data packets to a server (archlinux.org) and measures:
+• Whether the connection is working (can we reach the server?)
+• How fast the connection is (measured in milliseconds)
+• If packets are getting lost (which indicates connection problems)
+
+<strong>Understanding the output:</strong>
+• <strong>"64 bytes from..."</strong> means the server responded successfully
+• <strong>"time=12.4 ms"</strong> shows the round-trip time (lower is better)
+  - Under 50ms: Excellent
+  - 50-100ms: Good
+  - 100-200ms: Acceptable
+  - Over 200ms: Slow but workable
+• <strong>"0% packet loss"</strong> confirms all our packets made it there and back
+
+<strong>What if ping fails?</strong>
+• Check cable connection (Ethernet)
+• Verify WiFi password (WiFi)
+• Check router is working
+• Try pinging 8.8.8.8 (Google DNS) to test without DNS
+
+<strong>Why -c 3?</strong>
+The '-c 3' flag means "count 3 packets". This is enough to verify connectivity without waiting too long. Without it, ping would continue forever!`,
+                command: "ping -c 3 archlinux.org",
+                hint: "The '-c 3' flag means 'send 3 ping packets'. This is enough to verify connectivity without waiting too long.",
+                output: `PING archlinux.org (95.217.163.246) 56(84) bytes of data.
+64 bytes from archlinux.org (95.217.163.246): icmp_seq=1 ttl=54 time=12.4 ms
+64 bytes from archlinux.org (95.217.163.246): icmp_seq=2 ttl=54 time=11.8 ms
+64 bytes from archlinux.org (95.217.163.246): icmp_seq=3 ttl=54 time=12.1 ms
+
+--- archlinux.org ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 11.8/12.1/12.4/0.3 ms
+
+✓ Internet connection is working!
+✓ Average latency: 12.1ms (Excellent)
+✓ DNS resolution working
+✓ Ready to download packages`,
+                type: "command"
+            },
+            {
+                id: 6,
+                title: "Update System Clock",
+                description: "Let's synchronize our system clock with internet time servers. Accurate time is more important than you might think!",
+                explanation: `
+<strong>Why accurate time matters:</strong>
+Having the correct time is essential for:
+• SSL/TLS certificates (used for secure HTTPS connections)
+• File timestamps and modification dates
+• Logging and debugging (knowing when things happened)
+• Package managers verifying download authenticity
+• Many system services that rely on accurate time
+
+<strong>What is NTP?</strong>
+NTP (Network Time Protocol) automatically synchronizes your computer's clock with highly accurate time servers on the internet. These servers get their time from atomic clocks!
+
+<strong>What happens here:</strong>
+The command 'timedatectl set-ntp true' enables automatic time synchronization, ensuring your system clock stays accurate throughout the installation and beyond.`,
+                command: "timedatectl set-ntp true",
+                hint: "'timedatectl' is the systemd utility for controlling time and date settings. 'set-ntp true' enables network time synchronization.",
+                output: `✓ System clock synchronized via NTP
+Current time: 2025-11-05 14:32:18 UTC`,
+                type: "command"
+            },
+            {
+                id: 7,
+                title: "Choose Your Boot Mode",
+                description: "Critical decision! Are you installing on a newer system (UEFI) or an older system (Legacy BIOS)? This determines how we partition the disk.",
+                explanation: `
+<strong>Understanding Boot Modes:</strong>
+
+<strong>UEFI (Unified Extensible Firmware Interface):</strong>
+• Modern standard (computers from ~2012+)
+• Requires GPT partition table
+• Uses EFI System Partition (ESP) for bootloader
+• Supports Secure Boot
+• Can handle drives larger than 2TB
+• Faster boot times
+• Better security features
+
+<strong>Legacy BIOS (MBR):</strong>
+• Older standard (before ~2012)
+• Uses MBR (Master Boot Record) partition table
+• Bootloader in first 512 bytes of disk
+• Maximum 4 primary partitions
+• Limited to 2TB drive size
+• Still widely supported
+
+<strong>How to check in real installation:</strong>
+If 'ls /sys/firmware/efi/efivars' shows files → UEFI
+If directory doesn't exist → Legacy BIOS
+
+<strong>Which should you choose?</strong>
+• <strong>New computer (2012+):</strong> Almost certainly UEFI
+• <strong>Old computer (pre-2012):</strong> Probably Legacy BIOS
+• <strong>Virtual Machine:</strong> Check your VM settings
+• <strong>Not sure?:</strong> UEFI is the modern standard
+
+<strong>What this affects:</strong>
+• Partitioning tool (gdisk for UEFI, fdisk for BIOS)
+• Partition layout (EFI partition needed for UEFI)
+• Bootloader installation (different commands)
+
+<strong>Important:</strong>
+You MUST match your actual hardware! Installing UEFI on BIOS-only system (or vice versa) will result in an unbootable system.`,
+                hint: "Most modern computers use UEFI. If your computer is from 2012 or newer, choose UEFI/GPT.",
+                choices: [
+                    { text: "🆕 UEFI/GPT - Modern systems (2012+)", value: "uefi", correct: true, path: "uefi" },
+                    { text: "🔙 Legacy BIOS/MBR - Older systems (pre-2012)", value: "bios", correct: true, path: "bios" }
+                ],
+                output: ``, // Will be set based on choice
+                type: "choice-path"
+            },
+            {
+                id: 8,
+                title: "Verify UEFI Boot Mode",
+                description: "Let's confirm your system is actually booted in UEFI mode by checking for EFI variables.",
+                explanation: `
+<strong>Why this verification matters:</strong>
+Just because your hardware supports UEFI doesn't mean you booted in UEFI mode! You need to verify this before proceeding.
+
+<strong>What we're checking:</strong>
+The /sys/firmware/efi/efivars directory only exists if the system booted in UEFI mode. This directory contains:
+• Boot configuration variables
+• Boot order settings  
+• Secure Boot status
+• Other UEFI firmware settings
+
+<strong>What the output means:</strong>
+• <strong>Files listed:</strong> System is in UEFI mode ✓
+• <strong>"No such file or directory":</strong> System is in Legacy BIOS mode ✗
+
+<strong>If this check fails:</strong>
+You need to:
+1. Reboot your computer
+2. Enter BIOS/UEFI settings (usually F2, F10, or Del key)
+3. Look for "Boot Mode" or "UEFI/Legacy" setting
+4. Change to "UEFI only" or "UEFI first"
+5. Disable "Legacy Boot" or "CSM" (Compatibility Support Module)
+6. Save and reboot
+
+<strong>Why UEFI is better:</strong>
+• Faster boot times (no BIOS POST)
+• Support for drives larger than 2TB
+• Better security (Secure Boot)
+• More reliable booting
+• Modern standard that will be supported for decades`,
+                command: "ls /sys/firmware/efi/efivars",
+                hint: "This command lists the contents of the EFI variables directory. Think of it as checking if UEFI mode is 'turned on'.",
+                output: `Boot-0000-8be4df61-93ca-11d2-aa0d-00e098032b8c
+Boot-0001-8be4df61-93ca-11d2-aa0d-00e098032b8c
+BootCurrent-8be4df61-93ca-11d2-aa0d-00e098032b8c
+BootOrder-8be4df61-93ca-11d2-aa0d-00e098032b8c
+SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c
+... (many more EFI variables)
+
+✓ System is booted in UEFI mode!
+✓ EFI variables accessible
+✓ Ready for UEFI/GPT installation`,
+                type: "command",
+                showOnlyForPath: "uefi"
+            },
+            {
+                id: 9,
+                title: "Verify Legacy BIOS Mode",
+                description: "Let's confirm your system is booted in Legacy BIOS mode (not UEFI).",
+                explanation: `
+<strong>Why this matters:</strong>
+We need to make sure you're NOT in UEFI mode before proceeding with a Legacy BIOS installation.
+
+<strong>What we're checking:</strong>
+If /sys/firmware/efi/efivars doesn't exist, the system booted in Legacy BIOS mode (which is what we want for MBR installation).
+
+<strong>Legacy BIOS characteristics:</strong>
+• Uses MBR (Master Boot Record) partitioning
+• Bootloader stored in first 512 bytes of disk
+• Simpler but older technology
+• Limited to 2TB drive size per partition
+• Maximum 4 primary partitions
+
+<strong>When to use Legacy BIOS:</strong>
+• Old hardware (pre-2012)
+• System doesn't support UEFI
+• Motherboard BIOS set to Legacy-only
+• Dual-booting with old Windows (XP, Vista, 7 on MBR)
+
+<strong>If you get files listed instead:</strong>
+Your system IS in UEFI mode! You should:
+• Go back and choose UEFI/GPT path instead
+• Or reboot and enable Legacy/CSM mode in BIOS
+
+<strong>Important note:</strong>
+While Legacy BIOS still works, UEFI is the modern standard. Only use Legacy if you have specific reasons (old hardware, compatibility requirements).`,
+                command: "test -d /sys/firmware/efi/efivars && echo 'UEFI Mode' || echo 'Legacy BIOS Mode'",
+                hint: "This checks if EFI variables exist. For Legacy BIOS installation, we want 'Legacy BIOS Mode' as the result.",
+                output: `Legacy BIOS Mode
+
+✓ System is booted in Legacy BIOS mode
+✓ No EFI variables found (as expected)
+✓ Ready for Legacy BIOS/MBR installation
+
+Note: You'll use fdisk for partitioning and install GRUB differently.`,
+                type: "command",
+                showOnlyForPath: "bios"
+            },
+            {
+                id: 10,
+                title: "Partition Disk with GPT (UEFI)",
+                description: "Time to prepare the hard drive for UEFI! We'll use gdisk to create a GPT partition table with three partitions.",
+                explanation: `
+<strong>What are partitions?</strong>
+Think of your hard drive like a building. Partitions are like dividing it into different rooms:
+• <strong>EFI Partition:</strong> The lobby - where the bootloader lives (512MB)
+• <strong>Swap Partition:</strong> The storage room - extra memory when RAM is full (4GB)
+• <strong>Root Partition:</strong> Your living space - where your OS and files live (rest of disk)
+
+<strong>Why these specific partitions for UEFI?</strong>
+• <strong>EFI (512MB, Type: EF00):</strong> REQUIRED for UEFI boot. Contains bootloader files and UEFI boot managers.
+• <strong>Swap (4GB, Type: 8200):</strong> Virtual memory. Also needed for hibernation. Size = 1-2x your RAM.
+• <strong>Root / (remaining space, Type: 8300):</strong> Your entire Linux system lives here.
+
+<strong>What is GPT?</strong>
+GPT (GUID Partition Table) is the modern partition table format:
+• Replaces old MBR format
+• Required for UEFI boot
+• Supports drives larger than 2TB
+• Allows virtually unlimited partitions (not limited to 4)
+• More reliable (stores multiple copies)
+• Each partition has a unique GUID
+
+<strong>About gdisk:</strong>
+gdisk is the GPT version of fdisk. It creates and manages GPT partition tables.
+
+<strong>Partition type codes:</strong>
+• <strong>EF00:</strong> EFI System Partition (FAT32)
+• <strong>8200:</strong> Linux swap
+• <strong>8300:</strong> Linux filesystem (ext4, btrfs, etc.)
+
+<strong>The partitioning process:</strong>
+1. Start gdisk on /dev/sda (your hard drive)
+2. Create partition 1: 512MB for EFI (type EF00)
+3. Create partition 2: 4GB for swap (type 8200)
+4. Create partition 3: Rest of disk for root (type 8300)
+5. Write changes to disk (w command)
+
+<strong>Warning:</strong>
+This will ERASE all data on the disk! In a real installation, backup first!`,
+                command: "gdisk /dev/sda",
+                hint: "gdisk creates GPT partition tables required for UEFI. We'll create 3 partitions: EFI (512MB), Swap (4GB), and Root (remaining).",
+                output: `GPT fdisk (gdisk) version 1.0.9
+
+Starting gdisk /dev/sda
+
+Creating new GPT entries in memory...
+
+Command (? for help): n
+Partition number (1-128, default 1): 1
+First sector (2048-209715166, default = 2048): [Enter]
+Last sector or +size{KMGTP} (default = 209715166): +512M
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): EF00
+Changed type of partition to 'EFI System'
+
+Command (? for help): n  
+Partition number (2-128, default 2): 2
+First sector (1050624-209715166, default = 1050624): [Enter]
+Last sector or +size{KMGTP} (default = 209715166): +4G
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): 8200
+Changed type of partition to 'Linux swap'
+
+Command (? for help): n
+Partition number (3-128, default 3): 3
+First sector (9439232-209715166, default = 9439232): [Enter]
+Last sector or +size{KMGTP} (default = 209715166): [Enter]
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): [Enter]
+Partition 3 created (Linux filesystem)
+
+Command (? for help): w
+Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING PARTITIONS!!
+Do you want to proceed? (Y/N): Y
+
+OK; writing new GUID partition table (GPT) to /dev/sda.
+The operation has completed successfully.
+
+✓ GPT partition table created successfully!
+
+Partition layout:
+/dev/sda1: 512MB   (EF00 - EFI System)
+/dev/sda2: 4GB     (8200 - Linux swap)
+/dev/sda3: ~95GB   (8300 - Linux filesystem)`,
+                type: "command",
+                showOnlyForPath: "uefi"
+            },
+            {
+                id: 11,
+                title: "Partition Disk with MBR (Legacy BIOS)",
+                description: "Time to prepare the hard drive for Legacy BIOS! We'll use fdisk to create an MBR partition table with three partitions.",
+                explanation: `
+<strong>What are partitions?</strong>
+Think of your hard drive like a building divided into rooms:
+• <strong>Swap Partition:</strong> The storage room - extra memory when RAM is full (4GB)
+• <strong>Root Partition:</strong> Your living space - where your entire OS and files live (rest of disk)
+
+<strong>Why these specific partitions for Legacy BIOS?</strong>
+• <strong>Swap (4GB, Type: 82):</strong> Virtual memory. Also needed for hibernation. Size = 1-2x your RAM.
+• <strong>Root / (remaining space, Type: 83):</strong> Your entire Linux system lives here.
+
+<strong>Note about MBR:</strong>
+Unlike UEFI/GPT, Legacy BIOS/MBR does NOT need a separate boot partition! The bootloader (GRUB) installs directly to the MBR (first 512 bytes of the disk).
+
+<strong>What is MBR?</strong>
+MBR (Master Boot Record) is the classic partition table format:
+• Used since the 1980s
+• Maximum 4 primary partitions
+• Limited to 2TB per disk
+• Bootloader stored in first 512 bytes
+• Simple and well-supported
+
+<strong>About fdisk:</strong>
+fdisk is the classic partitioning tool for MBR/DOS partition tables.
+
+<strong>Partition type codes:</strong>
+• <strong>82:</strong> Linux swap
+• <strong>83:</strong> Linux filesystem (ext4, ext3, etc.)
+• <strong>8e:</strong> Linux LVM (if you want LVM)
+
+<strong>The partitioning process:</strong>
+1. Start fdisk on /dev/sda (your hard drive)
+2. Create new DOS partition table (o command)
+3. Create partition 1: 4GB for swap (type 82)
+4. Create partition 2: Rest of disk for root (type 83)
+5. Write changes to disk (w command)
+
+<strong>Bootloader location:</strong>
+With MBR, GRUB will be installed to /dev/sda (the disk itself), not a partition. The first 512 bytes hold the bootloader code.
+
+<strong>Warning:</strong>
+This will ERASE all data on the disk! In a real installation, backup first!`,
+                command: "fdisk /dev/sda",
+                hint: "fdisk creates MBR partition tables for Legacy BIOS. We'll create 2 partitions: Swap (4GB) and Root (remaining). No EFI partition needed!",
+                output: `Welcome to fdisk (util-linux 2.38.1)
+Changes will remain in memory only, until you decide to write them.
+
+Command (m for help): o
+Created a new DOS disklabel with identifier 0x8b3a4f2c.
+
+Command (m for help): n
+Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-209715199, default 2048): [Enter]
+Last sector or +size{K,M,G,T,P} (default 209715199): +4G
+
+Created a new partition 1 of type 'Linux' and of size 4 GiB.
+
+Command (m for help): t
+Selected partition 1
+Hex code or alias (type L to list all): 82
+Changed type of partition 'Linux' to 'Linux swap / Solaris'.
+
+Command (m for help): n
+Partition type
+   p   primary (1 primary, 0 extended, 3 free)
+   e   extended (container for logical partitions)
+Select (default p): p
+Partition number (2-4, default 2): 2
+First sector (8390656-209715199, default 8390656): [Enter]
+Last sector or +size{K,M,G,T,P} (default 209715199): [Enter]
+
+Created a new partition 2 of type 'Linux' and of size 95.9 GiB.
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+✓ MBR partition table created successfully!
+
+Partition layout:
+/dev/sda1: 4GB     (Type 82 - Linux swap)
+/dev/sda2: ~96GB   (Type 83 - Linux filesystem)
+
+Note: Bootloader will be installed to /dev/sda (MBR) later.`,
+                type: "command",
+                showOnlyForPath: "bios"
+            },
+            {
+                id: 12,
+                title: "Format Partitions (UEFI/GPT)",
+                description: "Now we'll format each partition with the appropriate filesystem for UEFI/GPT setup. Think of this as choosing what language each room speaks!",
+                explanation: `
+<strong>What is formatting?</strong>
+Creating partitions is like drawing rooms on a blueprint. Formatting is like actually building the rooms and deciding how they'll organize stuff inside.
+
+<strong>Understanding the filesystems:</strong>
+
+<strong>FAT32 (for EFI partition):</strong>
+• Simple and universal - all operating systems can read it
+• Required by UEFI specification
+• Perfect for bootloader files
+
+<strong>ext4 (for root partition):</strong>
+• The standard Linux filesystem
+• Fast, reliable, and mature
+• Supports journaling (protects against data loss)
+• Handles millions of files efficiently
+
+<strong>Swap (for swap partition):</strong>
+• Not really a "filesystem" - it's virtual memory
+• Used when RAM is full
+• Also required for hibernation (suspend-to-disk)
+• Size tip: Usually 1-2x your RAM amount
+
+<strong>Breaking down the command:</strong>
+• mkfs.fat -F32 /dev/sda1 → Format partition 1 as FAT32
+• mkfs.ext4 /dev/sda3 → Format partition 3 as ext4
+• mkswap /dev/sda2 → Set up partition 2 as swap
+• && means "run next command only if previous succeeded"`,
+                command: "mkfs.fat -F32 /dev/sda1 && mkswap /dev/sda2 && mkfs.ext4 /dev/sda3",
+                hint: "We chain three commands with '&&' - this formats all three partitions for UEFI. EFI gets FAT32, swap gets mkswap, root gets ext4.",
+                output: `Formatting /dev/sda1 as FAT32...
+mkfs.fat 4.2 (2021-01-31)
+✓ EFI partition (/dev/sda1) formatted as FAT32
+
+Setting up swap on /dev/sda2...
+Setting up swapspace version 1, size = 4 GiB (4294967296 bytes)
+no label, UUID=3a5f8b2c-91d4-4e7a-9c3b-1f8e2d7a6b4c
+✓ Swap partition (/dev/sda2) created
+
+Formatting /dev/sda3 as ext4...
+mke2fs 1.46.5 (30-Dec-2021)
+Creating filesystem with 25165824 4k blocks and 6291456 inodes
+Filesystem UUID: 7c8f4a1b-2e9d-4f6c-8b3a-5d9e1c7f2a6b
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376, 294912
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (131072 blocks): done
+Writing superblocks and filesystem accounting information: done
+✓ Root partition (/dev/sda3) formatted as ext4
+
+Enabling swap...
+swapon /dev/sda2
+✓ Swap enabled (4GB available)
+
+All partitions formatted and ready!`,
+                type: "command",
+                showOnlyForPath: "uefi"
+            },
+            {
+                id: 13,
+                title: "Format Partitions (Legacy BIOS/MBR)",
+                description: "Now we'll format each partition with the appropriate filesystem for Legacy BIOS/MBR setup.",
+                explanation: `
+<strong>What is formatting?</strong>
+Creating partitions is like drawing rooms on a blueprint. Formatting is like actually building the rooms and deciding how they'll organize stuff inside.
+
+<strong>Understanding the filesystems:</strong>
+
+<strong>ext4 (for root partition):</strong>
+• The standard Linux filesystem
+• Fast, reliable, and mature (10+ years old)
+• Supports journaling (protects against data loss)
+• Handles millions of files efficiently
+• Maximum file size: 16TB
+• Maximum partition size: 1EB (1 million TB!)
+
+<strong>Swap (for swap partition):</strong>
+• Not really a "filesystem" - it's virtual memory
+• Used when RAM is full (like Windows page file)
+• Also required for hibernation (suspend-to-disk)
+• Size tip: Usually 1-2x your RAM amount
+• No performance penalty for being on separate partition
+
+<strong>Breaking down the command:</strong>
+• mkswap /dev/sda1 → Set up partition 1 as swap
+• mkfs.ext4 /dev/sda2 → Format partition 2 as ext4
+• && means "run next command only if previous succeeded"
+
+<strong>Why no FAT32?</strong>
+Legacy BIOS doesn't use an EFI partition! The bootloader (GRUB) will be installed directly to the MBR (first 512 bytes of /dev/sda) later.
+
+<strong>What's happening:</strong>
+1. mkswap creates swap signature and UUID
+2. mkfs.ext4 creates ext4 filesystem with journal
+3. Both partitions are now ready to use
+4. We'll enable swap and mount root next
+
+<strong>Journal explained:</strong>
+The ext4 journal is like a diary of pending changes. If power fails during a write, the journal helps recover and prevents corruption.`,
+                command: "mkswap /dev/sda1 && mkfs.ext4 /dev/sda2",
+                hint: "For Legacy BIOS, we only format two partitions: swap and root. No EFI partition needed!",
+                output: `Setting up swap on /dev/sda1...
+Setting up swapspace version 1, size = 4 GiB (4294967296 bytes)
+no label, UUID=3a5f8b2c-91d4-4e7a-9c3b-1f8e2d7a6b4c
+✓ Swap partition (/dev/sda1) created
+
+Formatting /dev/sda2 as ext4...
+mke2fs 1.46.5 (30-Dec-2021)
+Creating filesystem with 25165824 4k blocks and 6291456 inodes
+Filesystem UUID: 7c8f4a1b-2e9d-4f6c-8b3a-5d9e1c7f2a6b
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376, 294912
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (131072 blocks): done
+Writing superblocks and filesystem accounting information: done
+✓ Root partition (/dev/sda2) formatted as ext4
+
+Enabling swap...
+swapon /dev/sda1
+✓ Swap enabled (4GB available)
+
+Both partitions formatted and ready!`,
+                type: "command",
+                showOnlyForPath: "bios"
+            },
+            {
+                id: 14,
+                title: "Mount Partitions (UEFI/GPT)",
+                description: "Before we can install Arch, we need to 'mount' our UEFI/GPT partitions. This makes them accessible to the system.",
+                explanation: `
+<strong>What does "mounting" mean?</strong>
+In Linux, mounting is like plugging in a USB drive - it makes the storage accessible at a specific location in your file system.
+
+<strong>Why mount to /mnt?</strong>
+• /mnt is a temporary mount point
+• We're preparing to install TO this location
+• Once installation is complete and we reboot, / (root) will be on /dev/sda3
+
+<strong>The mounting hierarchy:</strong>
+1. First: Mount root partition (/dev/sda3) to /mnt
+   → This becomes the base of our new system
+2. Second: Create /mnt/boot directory
+   → This will hold our kernel and bootloader
+3. Third: Mount EFI partition (/dev/sda1) to /mnt/boot
+   → UEFI firmware looks here to boot the system
+
+<strong>Think of it like this:</strong>
+/mnt (root partition) is your house
+/mnt/boot (EFI partition) is your front door
+The UEFI firmware needs to find the door to enter your house!
+
+<strong>Command breakdown:</strong>
+• mount /dev/sda3 /mnt → Attach root partition
+• mkdir /mnt/boot → Create boot directory
+• mount /dev/sda1 /mnt/boot → Attach EFI partition`,
+                command: "mount /dev/sda3 /mnt && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot",
+                hint: "We mount root first, create the boot directory inside it, then mount the EFI partition there. Order matters!",
+                output: `Mounting /dev/sda3 to /mnt...
+✓ Root partition mounted
+
+Creating boot directory...
+✓ /mnt/boot created
+
+Mounting /dev/sda1 to /mnt/boot...
+✓ EFI partition mounted
+
+Partition layout:
+/dev/sda1 (512MB, FAT32) → /mnt/boot (EFI)
+/dev/sda2 (4GB, swap) → [swap space]
+/dev/sda3 (remaining, ext4) → /mnt (Root)`,
+                type: "command"
+            },
+            {
+                id: 7,
+                title: "Install Base System",
+                description: "This is the exciting part! We'll download and install the core Arch Linux system. Time to build your system from the ground up!",
+                explanation: `
+<strong>What is pacstrap?</strong>
+'pacstrap' (Package Bootstrap) is Arch's installation tool. It downloads packages and installs them to your mounted partition (/mnt).
+
+<strong>What we're installing:</strong>
+
+<strong>base:</strong>
+• The absolute minimum packages to run Arch Linux
+• Includes essential utilities like bash (shell), coreutils (basic commands)
+• Does NOT include everything - Arch philosophy is "install what you need"
+
+<strong>linux:</strong>
+• The Linux kernel itself - the heart of the operating system
+• Handles hardware, memory, processes, file systems
+• This is what makes it "Linux"!
+
+<strong>linux-firmware:</strong>
+• Binary blobs (drivers) for various hardware
+• WiFi cards, graphics cards, sound cards
+• Not open source, but necessary for modern hardware
+
+<strong>Why so minimal?</strong>
+Arch's philosophy: Start with bare essentials, add only what YOU need. This gives you:
+• Total control over your system
+• No bloat or unnecessary software
+• Understanding of every component
+• A lean, fast system
+
+<strong>This will take a while because:</strong>
+• Downloading ~400MB of packages from mirrors
+• Verifying package signatures for security
+• Extracting and installing to /mnt`,
+                command: "pacstrap /mnt base linux linux-firmware",
+                hint: "This command downloads and installs packages to /mnt. It's like running 'apt install' or 'yum install' but for a fresh system.",
+                output: `Retrieving packages from mirrors...
+Downloading base (300 packages)...
+█████████████████████ 100% [~200MB]
+
+Downloading linux (kernel)...
+█████████████████████ 100% [~80MB]
+
+Downloading linux-firmware...
+█████████████████████ 100% [~120MB]
+
+Installing packages to /mnt...
+[1/300] Installing iana-etc (port/protocol database)...
+[2/300] Installing filesystem (base directory structure)...
+[3/300] Installing glibc (GNU C Library)...
+[50/300] Installing bash (shell)...
+[100/300] Installing systemd (init system)...
+[200/300] Installing pacman (package manager)...
+[298/300] Installing linux (kernel)...
+[299/300] Installing linux-firmware (hardware drivers)...
+[300/300] Installing base (meta-package)...
+
+✓ Base system installed successfully!
+Total download: ~400MB
+Total installed: ~1.2GB
+Time elapsed: 8 minutes 32 seconds
+
+Your minimal Arch system is now installed to /mnt!`,
+                type: "command"
+            },
+            {
+                id: 8,
+                title: "Generate Fstab",
+                description: "Let's create the fstab file - this tells Linux which partitions to mount automatically when the system boots.",
+                explanation: `
+<strong>What is fstab?</strong>
+fstab (File System Table) is a configuration file at /etc/fstab that tells Linux:
+• Which partitions exist
+• Where to mount them
+• What options to use
+• In what order to mount them
+
+<strong>Why do we need it?</strong>
+Without fstab, every time you boot:
+• Your root partition wouldn't mount automatically
+• Your EFI partition wouldn't be accessible
+• Swap wouldn't be enabled
+• You'd have to mount everything manually!
+
+<strong>What does 'genfstab' do?</strong>
+• Looks at currently mounted partitions
+• Generates proper fstab entries for each
+• Uses UUIDs (unique identifiers) instead of device names
+
+<strong>Why UUIDs (-U flag)?</strong>
+Device names like /dev/sda1 can change if you:
+• Add/remove hard drives
+• Change drive order
+• Use USB drives
+
+UUIDs are permanent identifiers - like serial numbers for partitions. Much more reliable!
+
+<strong>The >> operator:</strong>
+• >> means "append to file"
+• We're adding to /mnt/etc/fstab (the new system's fstab)
+• This ensures partitions mount correctly after reboot`,
+                command: "genfstab -U /mnt >> /mnt/etc/fstab",
+                hint: "This generates fstab entries using UUIDs and appends them to the fstab file in your new system.",
+                output: `Generating fstab with UUIDs...
+
+# /dev/sda3 (root filesystem)
+UUID=1234-5678-90ab-cdef / ext4 rw,relatime 0 1
+
+# /dev/sda1 (EFI boot partition)  
+UUID=ABCD-EFGH-1234-5678 /boot vfat rw,relatime,fmask=0022 0 2
+
+# /dev/sda2 (swap)
+UUID=9876-5432-10fe-dcba none swap defaults 0 0
+
+✓ Fstab generated successfully!
+
+What this means:
+• Your root partition will auto-mount at /
+• Your boot partition will auto-mount at /boot  
+• Your swap will be automatically enabled
+• All using permanent UUID identifiers`,
+                type: "command"
+            },
+            {
+                id: 9,
+                title: "Configure System",
+                description: "Time to personalize! We'll enter the new system and configure timezone, language, hostname, and create a user account.",
+                explanation: `
+<strong>What is chroot?</strong>
+'chroot' (Change Root) is like stepping into your new system while still in the installer.
+
+Think of it this way:
+• Right now you're outside the house, looking in
+• 'arch-chroot /mnt' lets you walk inside
+• Now you can configure things from the inside!
+
+<strong>What we're configuring:</strong>
+
+<strong>1. Timezone:</strong>
+• Sets your local time zone (America/New_York, Europe/London, etc.)
+• Ensures time displays correctly
+• Important for scheduling tasks
+
+<strong>2. Locale (Language):</strong>
+• Determines language, date format, currency
+• en_US.UTF-8 is US English with UTF-8 encoding
+• UTF-8 supports international characters (émojis, 中文, etc.)
+
+<strong>3. Hostname:</strong>
+• Your computer's name on the network
+• Shows up in terminal prompt and network
+• Like naming your computer "archlinux" or "mypc"
+
+<strong>4. User Account:</strong>
+• Root account = admin (dangerous to use daily)
+• Regular user = safer for everyday use
+• 'wheel' group = allowed to use sudo for admin tasks
+
+<strong>5. Passwords:</strong>
+• Root password for emergencies
+• User password for daily login
+• Always use strong passwords!`,
+                command: "arch-chroot /mnt",
+                hint: "This command changes root into your new system, allowing you to configure it from the inside. After this, we'll set up timezone, locale, hostname, and users.",
+                output: `Entering chroot environment...
+✓ Now inside the new Arch installation at /mnt
+
+[Configuring timezone]
+Setting timezone to America/New_York...
+✓ Timezone set (UTC-5)
+
+[Generating locales]  
+Uncommenting en_US.UTF-8 in /etc/locale.gen...
+Running locale-gen...
+Generating locales (this may take a moment)...
+  en_US.UTF-8... done
+✓ Locales generated
+✓ Set LANG=en_US.UTF-8 in /etc/locale.conf
+
+[Setting hostname]
+Setting hostname to 'archlinux'...
+✓ Hostname written to /etc/hostname
+✓ Hosts file configured
+
+[Creating user account]
+Creating user 'archuser'...
+Adding user to 'wheel' group (sudo access)...
+✓ User 'archuser' created
+
+[Configuring sudo]
+Installing sudo package...
+Enabling wheel group in /etc/sudoers...
+✓ Sudo configured for wheel group members
+
+[Setting passwords]
+Setting root password...
+✓ Root password set (for system recovery)
+
+Setting user password for 'archuser'...
+✓ User password set (for daily login)
+
+System configuration complete!`,
+                type: "command"
+            },
+            {
+                id: 10,
+                title: "Install Bootloader",
+                description: "The final critical step! Installing GRUB - the bootloader that will start your system when you turn on your computer.",
+                explanation: `
+<strong>What is a bootloader?</strong>
+Think of your computer starting up like a chain reaction:
+1. You press power button
+2. UEFI firmware wakes up
+3. UEFI looks for a bootloader on the EFI partition
+4. Bootloader (GRUB) loads the Linux kernel
+5. Kernel starts your Arch Linux system
+
+Without a bootloader, your computer wouldn't know HOW to start Linux!
+
+<strong>What is GRUB?</strong>
+GRUB (GRand Unified Bootloader) is:
+• The most popular Linux bootloader
+• Supports multiple operating systems (dual boot)
+• Provides a menu to choose which OS to boot
+• Highly configurable and reliable
+
+<strong>Understanding the command:</strong>
+
+<strong>grub-install --target=x86_64-efi:</strong>
+• Installs GRUB for 64-bit UEFI systems
+• --efi-directory=/boot: Where to put EFI files
+• --bootloader-id=GRUB: Name in UEFI boot menu
+
+<strong>grub-mkconfig -o /boot/grub/grub.cfg:</strong>
+• Generates GRUB configuration file
+• Auto-detects your Linux kernel
+• Creates boot menu entries
+• Configures boot options
+
+<strong>Enabling NetworkManager:</strong>
+• So you have internet when you first boot
+• NetworkManager handles WiFi, Ethernet, etc.
+• 'systemctl enable' means "start on boot"
+
+<strong>After this step:</strong>
+You can reboot, remove the USB, and boot into your brand new Arch Linux system! 🎉`,
+                command: "grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg",
+                hint: "This installs GRUB to the EFI partition and generates its configuration. The && ensures the second command only runs if the first succeeds.",
+                output: `[Installing GRUB bootloader]
+Installing for x86_64-efi platform...
+Installation finished. No error reported.
+✓ GRUB installed to /boot/EFI/GRUB
+
+[Generating GRUB configuration]
+Generating grub configuration file...
+Found theme: /boot/grub/themes/starfield/theme.txt
+Found linux image: /boot/vmlinuz-linux
+Found initrd image: /boot/initramfs-linux.img  
+Found fallback initrd image: /boot/initramfs-linux-fallback.img
+Adding boot menu entry for UEFI Firmware Settings...
+done
+✓ GRUB configuration generated at /boot/grub/grub.cfg
+
+[Enabling NetworkManager]
+Installing NetworkManager...
+Created symlink /etc/systemd/system/multi-user.target.wants/NetworkManager.service
+✓ NetworkManager will start on boot
+
+🎉 Installation complete!
+
+What happens next:
+1. Exit chroot (type 'exit')
+2. Unmount partitions (umount -R /mnt)
+3. Reboot (reboot)
+4. Remove installation USB
+5. Boot into your new Arch Linux system!
+
+Congratulations! You've successfully installed Arch Linux from scratch!`,
+                type: "command"
+            }
+        ];
+
+        let currentStep = 0;
+        let userInputEnabled = false;
+        let userPath = {
+            network: null,  // 'ethernet' or 'wifi'
+            bootMode: null  // 'uefi' or 'bios'
+        };
+
+        // Initialize
+        function init() {
+            renderStepList();
+            updateProgress();
+        }
+
+        // Render step list in sidebar
+        function renderStepList() {
+            const stepList = document.getElementById('step-list');
+            stepList.innerHTML = installationSteps.map((step, index) => `
+                <div id="step-item-${index}" class="flex items-center gap-3 p-3 rounded-lg transition ${index === currentStep ? 'step-item-active' : ''} ${index < currentStep ? 'opacity-50' : ''}">
+                    <span class="text-sm font-mono ${index === currentStep ? 'text-blue-400' : 'text-gray-500'}">
+                        ${index === currentStep ? '▶' : (index < currentStep ? '✓' : '◦')}
+                    </span>
+                    <span class="text-sm ${index < currentStep ? 'text-green-400 line-through' : index === currentStep ? 'text-white font-semibold' : 'text-gray-500'}">${step.title}</span>
+                </div>
+            `).join('');
+        }
+
+        // Update progress
+        function updateProgress() {
+            const progress = (currentStep / installationSteps.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('current-step').textContent = currentStep;
+            document.getElementById('total-steps').textContent = installationSteps.length;
+        }
+
+        // Start installation
+        function startInstallation() {
+            document.getElementById('start-btn').classList.add('hidden');
+            clearTerminal();
+            appendToTerminal('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'text-blue-500');
+            appendToTerminal('Starting Arch Linux installation simulation...', 'text-blue-400 font-semibold');
+            appendToTerminal('Follow the instructions and type commands carefully.', 'text-gray-400');
+            appendToTerminal('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'text-blue-500');
+            appendToTerminal('');
+            
+            setTimeout(() => {
+                nextStep();
+            }, 1000);
+        }
+
+        // Next step
+        function nextStep() {
+            if (currentStep >= installationSteps.length) {
+                showSuccessModal();
+                return;
+            }
+
+            const step = installationSteps[currentStep];
+            
+            // Skip steps that don't match the user's path
+            if (step.showOnlyForPath) {
+                const pathType = step.showOnlyForPath;
+                if (pathType === 'wifi' && userPath.network !== 'wifi') {
+                    currentStep++;
+                    nextStep();
+                    return;
+                } else if (pathType === 'uefi' && userPath.bootMode !== 'uefi') {
+                    currentStep++;
+                    nextStep();
+                    return;
+                } else if (pathType === 'bios' && userPath.bootMode !== 'bios') {
+                    currentStep++;
+                    nextStep();
+                    return;
+                }
+            }
+            
+            // Update instruction panel
+            document.getElementById('step-title').textContent = `Step ${currentStep + 1}: ${step.title}`;
+            document.getElementById('step-description').textContent = step.description;
+            
+            // Show detailed explanation if available
+            if (step.explanation) {
+                const explanationDiv = document.getElementById('step-explanation');
+                const explanationText = document.getElementById('explanation-text');
+                
+                // Convert the explanation to HTML with proper formatting
+                explanationText.innerHTML = step.explanation
+                    .replace(/\n/g, '<br>')
+                    .replace(/<strong>/g, '<strong class="text-purple-300">')
+                    .replace(/• /g, '<span class="text-green-400">•</span> ');
+                    
+                explanationDiv.classList.remove('hidden');
+            } else {
+                document.getElementById('step-explanation').classList.add('hidden');
+            }
+            
+            // Update step list highlighting
+            renderStepList();
+            updateProgress();
+            
+            // Show appropriate input method
+            if (step.type === 'command') {
+                showCommandInput();
+            } else if (step.type === 'choice' || step.type === 'choice-path') {
+                showChoices(step.choices);
+            }
+            
+            // Add prompt to terminal
+            appendToTerminal('');
+            appendToTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'text-blue-600');
+            appendToTerminal(`📦 Step ${currentStep + 1}: ${step.title}`, 'text-blue-400 font-bold text-base');
+            appendToTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'text-blue-600');
+            appendToTerminal(step.description, 'text-gray-300');
+            appendToTerminal('');
+        }
+
+        // Show command input
+        function showCommandInput() {
+            document.getElementById('input-section').classList.remove('hidden');
+            document.getElementById('choice-section').classList.add('hidden');
+            document.getElementById('command-input').value = '';
+            document.getElementById('command-input').focus();
+            userInputEnabled = true;
+            
+            // Show the command to type
+            const step = installationSteps[currentStep];
+            document.getElementById('command-display').classList.remove('hidden');
+            document.getElementById('command-text').textContent = step.command;
+            document.getElementById('step-hints').classList.remove('hidden');
+            document.getElementById('hint-text').textContent = step.hint;
+        }
+
+        // Show choices
+        function showChoices(choices) {
+            document.getElementById('input-section').classList.add('hidden');
+            document.getElementById('choice-section').classList.remove('hidden');
+            document.getElementById('command-display').classList.add('hidden');
+            
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = choices.map((choice, index) => `
+                <button 
+                    onclick="selectChoice(${index}, ${choice.correct})"
+                    class="w-full text-left glass-effect hover:bg-blue-600/20 border-2 border-blue-500/30 hover:border-blue-500 rounded-xl p-5 transition transform hover:scale-[1.02] hover:shadow-xl group"
+                >
+                    <div class="flex items-center justify-between">
+                        <span class="font-semibold text-gray-200 group-hover:text-white transition">${choice.text}</span>
+                        ${choice.correct ? '<span class="ml-2 text-green-400 text-sm flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Recommended</span>' : ''}
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        // Submit command
+        function submitCommand() {
+            const input = document.getElementById('command-input').value.trim();
+            const step = installationSteps[currentStep];
+            
+            if (!input) {
+                appendToTerminal('Please enter a command.', 'text-red-400');
+                return;
+            }
+            
+            // Show command in terminal
+            appendToTerminal(`root@archiso ~ # ${input}`, 'text-green-400');
+            
+            // Check if command is correct
+            if (input.toLowerCase() === step.command.toLowerCase() || input.includes(step.command.split(' ')[0])) {
+                appendToTerminal('');
+                setTimeout(() => {
+                    // Show output with typing effect
+                    const lines = step.output.split('\n');
+                    let delay = 0;
+                    lines.forEach(line => {
+                        setTimeout(() => {
+                            appendToTerminal(line, line.includes('✓') ? 'text-green-400' : 'text-gray-300');
+                        }, delay);
+                        delay += 100;
+                    });
+                    
+                    setTimeout(() => {
+                        completeStep();
+                    }, delay + 1000);
+                }, 500);
+            } else {
+                appendToTerminal(`bash: ${input.split(' ')[0]}: command not found`, 'text-red-400');
+                appendToTerminal('Try again or use the hint button.', 'text-yellow-400');
+            }
+        }
+
+        // Select choice
+        function selectChoice(index, isCorrect) {
+            const step = installationSteps[currentStep];
+            const choice = step.choices[index];
+            
+            appendToTerminal(`Selected: ${choice.text}`, 'text-purple-400');
+            appendToTerminal('');
+            
+            // Save the path choice if this is a path-determining step
+            if (step.type === 'choice-path' && choice.path) {
+                // Determine which path type this is
+                if (choice.path === 'ethernet' || choice.path === 'wifi') {
+                    userPath.network = choice.path;
+                    appendToTerminal(`✓ Network path set to: ${choice.path}`, 'text-yellow-400');
+                } else if (choice.path === 'uefi' || choice.path === 'bios') {
+                    userPath.bootMode = choice.path;
+                    appendToTerminal(`✓ Boot mode set to: ${choice.path}`, 'text-yellow-400');
+                }
+                appendToTerminal('');
+            }
+            
+            // Show output if available
+            if (step.output && step.output.trim()) {
+                setTimeout(() => {
+                    const lines = step.output.split('\n');
+                    let delay = 0;
+                    lines.forEach(line => {
+                        setTimeout(() => {
+                            appendToTerminal(line, line.includes('✓') ? 'text-green-400' : 'text-gray-300');
+                        }, delay);
+                        delay += 100;
+                    });
+                    
+                    setTimeout(() => {
+                        completeStep();
+                    }, delay + 1000);
+                }, 500);
+            } else {
+                // No output, just complete the step
+                setTimeout(() => {
+                    completeStep();
+                }, 500);
+            }
+        }
+
+        // Complete step
+        function completeStep() {
+            userInputEnabled = false;
+            document.getElementById('input-section').classList.add('hidden');
+            document.getElementById('choice-section').classList.add('hidden');
+            document.getElementById('command-display').classList.add('hidden');
+            document.getElementById('step-explanation').classList.add('hidden');
+            
+            currentStep++;
+            
+            if (currentStep < installationSteps.length) {
+                document.getElementById('next-btn').classList.remove('hidden');
+            } else {
+                setTimeout(() => {
+                    showSuccessModal();
+                }, 1000);
+            }
+        }
+
+        // Copy command to clipboard
+        function copyCommand() {
+            const step = installationSteps[currentStep];
+            navigator.clipboard.writeText(step.command).then(() => {
+                document.getElementById('copy-text').textContent = 'Copied!';
+                document.getElementById('copy-icon').textContent = '✓';
+                setTimeout(() => {
+                    document.getElementById('copy-text').textContent = 'Copy';
+                    document.getElementById('copy-icon').textContent = '📋';
+                }, 2000);
+            });
+        }
+
+        // Auto-fill command
+        function autoFillCommand() {
+            const step = installationSteps[currentStep];
+            document.getElementById('command-input').value = step.command;
+            document.getElementById('command-input').focus();
+        }
+
+        // Show hint (deprecated but keeping for compatibility)
+        function showHint() {
+            const step = installationSteps[currentStep];
+            const hintPanel = document.getElementById('step-hints');
+            document.getElementById('hint-text').textContent = step.hint;
+            hintPanel.classList.remove('hidden');
+        }
+
+        // Skip step
+        function skipStep() {
+            const step = installationSteps[currentStep];
+            appendToTerminal('Skipping step...', 'text-yellow-400');
+            appendToTerminal('');
+            
+            setTimeout(() => {
+                const lines = step.output.split('\n');
+                lines.forEach(line => {
+                    appendToTerminal(line, 'text-gray-500');
+                });
+                completeStep();
+            }, 500);
+        }
+
+        // Append to terminal
+        function appendToTerminal(text, className = 'text-gray-300') {
+            const terminal = document.getElementById('terminal');
+            const line = document.createElement('div');
+            line.className = className;
+            line.textContent = text;
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Clear terminal
+        function clearTerminal() {
+            document.getElementById('terminal').innerHTML = '';
+        }
+
+        // Show success modal
+        function showSuccessModal() {
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('flex');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+            document.getElementById('success-modal').classList.remove('flex');
+        }
+
+        // Restart simulation
+        function restartSimulation() {
+            currentStep = 0;
+            userInputEnabled = false;
+            userPath = {
+                network: null,
+                bootMode: null
+            };
+            clearTerminal();
+            closeModal();
+            
+            document.getElementById('start-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('input-section').classList.add('hidden');
+            document.getElementById('choice-section').classList.add('hidden');
+            document.getElementById('step-hints').classList.add('hidden');
+            document.getElementById('command-display').classList.add('hidden');
+            document.getElementById('step-explanation').classList.add('hidden');
+            
+            renderStepList();
+            updateProgress();
+            
+            // Reset instruction panel
+            document.getElementById('step-title').textContent = 'Welcome to Arch Linux Installer';
+            document.getElementById('step-description').textContent = 'Click "Start Installation" to begin the simulation.';
+            
+            // Show welcome message
+            appendToTerminal('', 'text-blue-400');
+            const asciiArt = `
+   _____                .__     
+  /  _  \\_______   ____ |  |__  
+ /  /_\\  \\_  __ \\_/ ___\\|  |  \\ 
+/    |    \\  | \\/\\  \\___|   Y  \\
+\\____|__  /__|    \\___  >___|  /
+        \\/            \\/     \\/ 
+        Linux Installation Simulator`;
+            appendToTerminal(asciiArt, 'text-blue-400');
+            appendToTerminal('');
+            appendToTerminal('Welcome to the Arch Linux Installation Simulator!', 'text-gray-400');
+            appendToTerminal('This interactive guide will walk you through the installation process.', 'text-gray-400');
+            appendToTerminal('');
+            appendToTerminal('Ready to begin? Click the button below to start.', 'text-gray-400');
+            appendToTerminal('');
+            appendToTerminal('root@archiso ~ # _', 'text-green-400');
+        }
+
+        // Enter key support
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            
+            document.getElementById('command-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && userInputEnabled) {
+                    submitCommand();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
