@@ -4,7 +4,7 @@
 
 ![Arch Linux](https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png)
 
-**An Interactive, Educational Platform for Mastering Arch Linux Installation**
+**Learn Arch Linux Installation Step-by-Step | Free Interactive Terminal Simulator | Practice UEFI & BIOS Setup Safely**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
@@ -17,9 +17,13 @@
 
 ---
 
+## 🎯 Master Arch Linux Installation Without Risk
+
+**Practice installing Arch Linux in your browser** with our free, interactive simulator. Perfect for beginners learning Linux, system administrators preparing for real installations, and enthusiasts mastering UEFI/GPT and BIOS/MBR setups. No virtual machine required—start learning immediately!
+
 ## 📖 Overview
 
-The **Arch Linux Installation Simulator** is a comprehensive, browser-based learning tool designed to teach users how to install Arch Linux from scratch in a safe, simulated environment. Perfect for beginners who want to understand the installation process before attempting it on real hardware, and for enthusiasts looking to review the steps.
+The **Arch Linux Installation Simulator** is a comprehensive, browser-based learning platform that teaches you how to install Arch Linux from scratch in a safe, simulated terminal environment. Master disk partitioning, bootloader configuration, WiFi setup, and package management through hands-on practice with real commands and instant feedback. Perfect for beginners who want to understand the installation process before attempting it on real hardware, and for enthusiasts looking to review the steps.
 
 ### 🎯 Why This Project?
 

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://frashasantoyt.github.io/Arch-Linux-Install-Simulator/sitemap.xml
