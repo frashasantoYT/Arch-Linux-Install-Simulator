@@ -100,18 +100,18 @@ Installing Arch Linux is often considered challenging for newcomers due to its m
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/arch-linux-simulator.git
+   git clone https://github.com/frashasantoYT/Arch-Linux-Install-Simulator.git
    cd arch-linux-simulator
    ```
 
 2. **Open the simulator**
    ```bash
    # Simply open the HTML file in your browser
-   open arch-linux-simulator.html
+   open index.html
    # or on Windows
-   start arch-linux-simulator.html
+   start index.html
    # or on Linux
-   xdg-open arch-linux-simulator.html
+   xdg-open index.html
    ```
 
 3. **Start learning!**
