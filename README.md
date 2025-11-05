@@ -11,7 +11,7 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-[Live Demo](#) • [Features](#-features) • [Getting Started](#-getting-started) • [Documentation](#-documentation)
+[🚀 Live Demo](https://frashasantoyt.github.io/Arch-Linux-Install-Simulator/) • [Features](#-features) • [Getting Started](#-getting-started) • [Documentation](#-documentation)
 
 </div>
 
@@ -282,11 +282,11 @@ Special thanks to:
 
 ## 📬 Contact
 
-- **Creator**: [Your Name]
-- **Portfolio**: [Your Portfolio Link]
-- **GitHub**: [@yourusername](https://github.com/yourusername)
-- **Email**: your.email@example.com
-- **Twitter**: [@yourhandle](https://twitter.com/yourhandle)
+- **Creator**: [King Santo]
+- **Portfolio**: [https://santoiservices.com]
+- **GitHub**: [@yourusername](https://github.com/frashasantoYT)
+- **Email**: frashasanto111@gmail.com
+
 
 ---
 
